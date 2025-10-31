@@ -3,6 +3,7 @@ from varasto import Varasto
 
 
 class TestVarasto(unittest.TestCase):
+    
     def setUp(self):
         self.varasto = Varasto(10)
 
@@ -17,6 +18,11 @@ class TestVarasto(unittest.TestCase):
         self.varasto.lisaa_varastoon(8)
 
         self.assertAlmostEqual(self.varasto.saldo, 8)
+    
+    def test_lisays_ei_negatiivinen(self):
+        self.varasto.lisaa_varastoon(-1)
+
+        self.assertAlmostEqual(self.varasto.saldo, 0)
 
     def test_lisays_lisaa_pienentaa_vapaata_tilaa(self):
         self.varasto.lisaa_varastoon(8)
@@ -31,6 +37,17 @@ class TestVarasto(unittest.TestCase):
 
         self.assertAlmostEqual(saatu_maara, 2)
 
+    def test_ottaminen_ei_negatiivinen(self):
+        saatu_maara = self.varasto.ota_varastosta(-2)
+
+        self.assertAlmostEqual(saatu_maara, 0)
+    
+    def test_ottaminen_ylittaa_saldon(self):
+
+        self.varasto.ota_varastosta(10)
+
+        self.assertAlmostEqual(self.varasto.saldo, 0)
+
     def test_ottaminen_lisaa_tilaa(self):
         self.varasto.lisaa_varastoon(8)
 
@@ -38,3 +55,32 @@ class TestVarasto(unittest.TestCase):
 
         # varastossa pitäisi olla tilaa 10 - 8 + 2 eli 4
         self.assertAlmostEqual(self.varasto.paljonko_mahtuu(), 4)
+
+    def test_varaston_maara_ylittyy(self):
+        self.varasto.lisaa_varastoon(11)
+
+        # varastossa pitäisi olla tilaa 10 - 8 + 2 eli 4
+        self.assertAlmostEqual(self.varasto.paljonko_mahtuu(), 0)
+
+    def test_varaston_maara_alittuu(self):
+
+        self.varasto.ota_varastosta(11)
+
+        self.assertAlmostEqual(self.varasto.paljonko_mahtuu(), 10)
+
+    def test_negatiivinen_tilavuus(self):
+
+        self.varasto = Varasto(-10)
+
+        self.assertAlmostEqual(self.varasto.paljonko_mahtuu(), 10)
+
+    def test_merkkijono(self):
+        testi = str(self.varasto)
+        vastaus = f"saldo = {0}, vielä tilaa {10}"
+
+        self.assertEqual(testi, vastaus)
+    
+    def test_negative_setUp(self):
+        self.varasto = Varasto(10,-2)
+
+        self.assertAlmostEqual(self.varasto.saldo, 0)

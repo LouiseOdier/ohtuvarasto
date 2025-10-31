@@ -72,7 +72,7 @@ class TestVarasto(unittest.TestCase):
 
         self.varasto = Varasto(-10)
 
-        self.assertAlmostEqual(self.varasto.paljonko_mahtuu(), 10)
+        self.assertAlmostEqual(self.varasto.paljonko_mahtuu(), 4)
 
     def test_merkkijono(self):
         testi = str(self.varasto)
